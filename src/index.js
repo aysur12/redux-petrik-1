@@ -1,71 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, bindActionCreators } from 'redux';
 
-const initialState = {
-  value: 0,
-};
+import reducer from './reducer';
+// import * as actions from './actions';
+import { Provider } from 'react-redux';
 
-const decBtn = document.querySelector('#decrement');
-const incBtn = document.querySelector('#increment');
-const rndBtn = document.querySelector('#random');
-const counter = document.querySelector('#counter');
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'INC':
-      return {
-        ...state,
-        value: state.value + 1,
-      };
-    case 'DEC':
-      return {
-        ...state,
-        value: state.value - 1,
-      };
-    case 'RND':
-      return {
-        ...state,
-        value: state.value + action.payload,
-      };
-    default:
-      return state;
-  }
-};
+import App from './components/App';
 
 const store = createStore(reducer);
-const updateCounter = () => {
-  counter.innerHTML = store.getState().value;
-};
-store.subscribe(updateCounter);
 
-// action creator
-const inc = () => ({ type: 'INC' });
-const dec = () => ({ type: 'DEC' });
-const rnd = (value) => ({ type: 'RND', payload: value });
+// const { dispatch, subscribe, getState } = store;
+// const { inc, dec, rnd } = bindActionCreators(actions, dispatch);
 
-decBtn.addEventListener('click', () => {
-  store.dispatch(dec());
-});
+ReactDOM.render(
+  <React.StrictMode>
+    {/* <Counter
+        counter={getState().value}
+        inc={inc}
+        dec={dec}
+        rnd={() => {
+          const value = Math.floor(Math.random() * 10);
+          rnd(value);
+        }}
+      /> */}
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-incBtn.addEventListener('click', () => {
-  store.dispatch(inc());
-});
+// update();
+// subscribe(update);
 
-rndBtn.addEventListener('click', () => {
-  const value = Math.floor(Math.random() * 10);
-  store.dispatch(rnd(value));
-});
+// const bindActionCreator = (creator, dispatch) => (...args) => {
+//   dispatch(creator(...args));
+// };
+
+// const incDispatch = bindActionCreators(inc, dispatch);
+// const decDispatch = bindActionCreators(dec, dispatch);
+// const rndDispatch = bindActionCreators(rnd, dispatch);
+
+//
 
 // let state = reducer(initialState, {type: 'INC'});
 // state = reducer(state, {type: 'INC'});
 // state = reducer(state, {type: 'INC'});
 // state = reducer(state, {type: 'INC'});
 // console.log(state);
-
-ReactDOM.render(
-  <React.StrictMode>
-    <></>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
